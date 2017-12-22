@@ -93,7 +93,7 @@ class GoodsImage(models.Model):
         return self.goods.name
 
 
-class Banner(models.ManyToOneRel):
+class Banner(models.Model):
     """
     轮播的商品
     """
