@@ -28,7 +28,7 @@ SECRET_KEY = 'i7(4opzc1fa-u&s%0!9a81%ziaavr454fxbts6k8f1$kel_-fv'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'users.UserProfile'
 
@@ -43,6 +43,11 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
 
     'DjangoUeditor',
+    'xadmin',
+    'crispy_forms',
+    'reversion',
+
+    'rest_framework',
 
     'goods',
     'trade',
@@ -135,3 +140,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

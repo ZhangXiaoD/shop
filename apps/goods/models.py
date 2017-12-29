@@ -70,7 +70,7 @@ class Goods(models.Model):
     add_time = models.DateTimeField(auto_now_add=True, verbose_name='添加时间')
 
     class Meta:
-        verbose_name = '商品',
+        verbose_name = '商品'
         verbose_name_plural = verbose_name
 
     def __str__(self):
