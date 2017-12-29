@@ -60,7 +60,7 @@ class Goods(models.Model):
     goods_num = models.IntegerField(default=0, verbose_name='库存')
     market_price = models.FloatField(default=0, verbose_name='市场价格')
     shop_price = models.FloatField(default=0, verbose_name='本店价格')
-    goods_brief = models.TextField(max_length=150, verbose_name='商品简短描述')
+    goods_brief = models.TextField(max_length=500, verbose_name='商品简短描述')
     goods_desc = UEditorField(verbose_name='商品介绍', imagePath='goods/desc', width=1000, height=300,
                               filePath='goods/files', default='')
     ship_free = models.BooleanField(default=True, verbose_name='是否承担运费')
