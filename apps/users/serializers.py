@@ -40,7 +40,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(min_length=6, max_length=20,
                                      validators=[UniqueValidator(queryset=UserProfile.objects.all(),
                                                                  message='该用户名已存在')])
-    password = serializers.CharField(min_length=6, max_length=20,
+    password = serializers.CharField(min_length=6, max_length=20, write_only=True,
                                      style={'input_type': 'password'})
     def validate_code(self, code):
         verify_record = VerifyCode.objects.filter(mobile=self.initial_data['mobile']).order_by('-add_time')
