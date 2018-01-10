@@ -42,6 +42,13 @@ class RegisterSerializer(serializers.ModelSerializer):
                                                                  message='该用户名已存在')])
     password = serializers.CharField(min_length=6, max_length=20, write_only=True,
                                      style={'input_type': 'password'})
+
+    def create(self, validated_data):
+        user = super(RegisterSerializer, self).create(validated_data=validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
     def validate_code(self, code):
         verify_record = VerifyCode.objects.filter(mobile=self.initial_data['mobile']).order_by('-add_time')
         if verify_record:
