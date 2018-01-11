@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'goods',
     'trade',
     'user_opeartion',
+    'utils',
 
 ]
 
