@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
-from rest_framework.mixins import CreateModelMixin
+from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 from .models import UserProfile, VerifyCode
@@ -26,7 +26,7 @@ class CustomBackend(ModelBackend):
             return None
 
 
-class SmsCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
+class SmsCodeViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
     发送短信验证码
     """
@@ -55,18 +55,27 @@ class SmsCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
         return Response({'status': 0, 'msg': '发送验证码成功。'})
 
 
-def create(self, request, *args, **kwargs):
-    serializer = self.get_serializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    user = self.perform_create(serializer)
 
-    re_dict = serializer.data
-    payload = jwt_payload_handler(user)
-    re_dict['token'] = jwt_encode_handler(payload)
+class UserViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    """
+    用户注册
+    """
+    queryset = UserProfile.objects.all()
+    serializer_class = RegisterSerializer
 
-    headers = self.get_success_headers(serializer.data)
-    return Response({'status': 0, 'data': re_dict}, status=status.HTTP_201_CREATED, headers=headers)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # if serializer.validated_data['type'] != 1:
+        #     return Response({'status':1, 'msg': '注册失败'})
+        user = self.perform_create(serializer)
 
+        re_dict = serializer.data
+        payload = jwt_payload_handler(user)
+        re_dict['token'] = jwt_encode_handler(payload)
 
-def perform_create(self, serializer):
-    return serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        return serializer.save()

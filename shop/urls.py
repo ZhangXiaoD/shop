@@ -22,6 +22,9 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_jwt.views import obtain_jwt_token
 
 from goods.views import GoodsListViewSet, CategoryViewSet
+from users.views import SmsCodeViewSet, UserViewSet
+from user_opeartion.views import UserFavViewSet
+
 
 
 router = DefaultRouter()
@@ -29,6 +32,13 @@ router = DefaultRouter()
 router.register('goods', GoodsListViewSet, base_name='goods')
 # 配置category的url
 router.register('categorys', CategoryViewSet, base_name='categorys')
+# 配置发送验证码url
+router.register('send_code', SmsCodeViewSet, base_name='send_code')
+# 配置用户url
+router.register('users', UserViewSet, base_name='users')
+# 配置用户收藏url
+router.register('userfavs', UserFavViewSet, base_name='userfavs')
+
 
 
 urlpatterns = [
