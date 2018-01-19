@@ -42,6 +42,7 @@ class RegisterSerializer(serializers.ModelSerializer):
                                                                  message='该用户名已存在')])
     password = serializers.CharField(min_length=6, max_length=20, write_only=True,
                                      style={'input_type': 'password'})
+    id = serializers.IntegerField(read_only=True)
 
     def create(self, validated_data):
         user = super(RegisterSerializer, self).create(validated_data=validated_data)
@@ -69,4 +70,14 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('username', 'code', 'mobile', 'password')
+        fields = ('id', 'username', 'code', 'mobile', 'password')
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    """
+    用户详情序列化类
+    """
+    mobile = serializers.CharField(read_only=True)
+    class Meta:
+        model = UserProfile
+        fields = ('name', 'gender', 'birthday', 'email', 'mobile')

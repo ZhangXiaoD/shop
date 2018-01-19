@@ -6,9 +6,10 @@ from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 from rest_framework import mixins
 from rest_framework import viewsets
+from rest_framework import permissions
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 from .models import UserProfile, VerifyCode
-from .serializers import SmsSerializer, RegisterSerializer
+from .serializers import SmsSerializer, RegisterSerializer, UserDetailSerializer
 
 # Create your views here.
 
@@ -56,12 +57,14 @@ class SmsCodeViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
 
 
-class UserViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class UserViewSet(mixins.CreateModelMixin,
+                  mixins.RetrieveModelMixin,
+                  mixins.UpdateModelMixin,
+                  viewsets.GenericViewSet):
     """
     用户注册
     """
     queryset = UserProfile.objects.all()
-    serializer_class = RegisterSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -79,3 +82,17 @@ class UserViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.G
 
     def perform_create(self, serializer):
         return serializer.save()
+
+    def get_permissions(self):
+        if self.action == 'retrieve':
+            return [permissions.IsAuthenticated()]
+        if self.action == 'create':
+            return []
+        return []
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return UserDetailSerializer
+        elif self.action == 'create':
+            return RegisterSerializer
+        return UserDetailSerializer
