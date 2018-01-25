@@ -21,7 +21,7 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 from rest_framework_jwt.views import obtain_jwt_token
 
-from goods.views import GoodsListViewSet, CategoryViewSet
+from goods.views import GoodsListViewSet, CategoryViewSet, BannerViewSet, IndexCategoryViewSet
 from users.views import SmsCodeViewSet, UserViewSet
 from user_opeartion.views import UserFavViewSet, LeavingMessageViewSet, AddressViewSet
 from trade.views import ShoppingCartViewSet, OrderViewSet
@@ -42,9 +42,13 @@ router.register('message', LeavingMessageViewSet, base_name='message')
 # 配置收货地址url
 router.register('address', AddressViewSet, base_name='address')
 # 配置购物车url
-router.register(('shopcards'), ShoppingCartViewSet ,base_name='shopcards')
+router.register(('shopcards'), ShoppingCartViewSet, base_name='shopcards')
 # 配置订单url
-router.register(('order'), OrderViewSet ,base_name='order')
+router.register(('order'), OrderViewSet, base_name='order'),
+# 配置轮播图url
+router.register(('banner'), BannerViewSet, base_name='banner')
+# 配置首页商品分类数据url
+router.register(('indexgoods'), IndexCategoryViewSet, base_name='indexgoods')
 
 
 

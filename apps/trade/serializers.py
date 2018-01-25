@@ -18,7 +18,7 @@ class ShoppingCartDetailSerializer(serializers.ModelSerializer):
 
 class ShoppingCartSerializer(serializers.Serializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    nums = serializers.IntegerField(min_value=1)
+    nums = serializers.IntegerField(required=True, min_value=1)
     goods = serializers.PrimaryKeyRelatedField(queryset=Goods.objects.all())
 
     def create(self, validated_data):
@@ -33,7 +33,7 @@ class ShoppingCartSerializer(serializers.Serializer):
             existed.nums += nums
             existed.save()
         else:
-            ShoppingCart.objects.create(**validated_data)
+            existed = ShoppingCart.objects.create(**validated_data)
 
         return existed
 
@@ -65,3 +65,21 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderInfo
         fields = '__all__'
+
+
+class OrderGoodsSerializer(serializers.ModelSerializer):
+    goods = GoodsSerializer()
+
+    class Meta:
+        model = OrderGoods
+        fields = '__all__'
+
+
+class OrderDetailSerializer(serializers.ModelSerializer):
+    goods = OrderGoodsSerializer(many=True)
+
+    class Meta:
+        model = OrderInfo
+        fields = '__all__'
+
+

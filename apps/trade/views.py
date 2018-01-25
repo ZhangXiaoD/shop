@@ -3,7 +3,8 @@ from rest_framework import mixins
 from rest_framework import permissions
 
 from utils.permissions import IsOwnerOrReadOnly
-from .serializers import ShoppingCartSerializer, ShoppingCartDetailSerializer, OrderSerializer
+from .serializers import ShoppingCartSerializer, ShoppingCartDetailSerializer, \
+    OrderSerializer, OrderDetailSerializer
 from .models import ShoppingCart, OrderInfo, OrderGoods
 # Create your views here.
 
@@ -31,6 +32,7 @@ class ShoppingCartViewSet(viewsets.ModelViewSet):
 
 
 class OrderViewSet(mixins.CreateModelMixin,
+                   mixins.RetrieveModelMixin,
                    mixins.DestroyModelMixin,
                    mixins.ListModelMixin,
                    viewsets.GenericViewSet):
@@ -43,10 +45,15 @@ class OrderViewSet(mixins.CreateModelMixin,
         获取订单
     """
     permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly)
-    serializer_class = OrderSerializer
 
     def get_queryset(self):
         return OrderInfo.objects.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return OrderDetailSerializer
+        else:
+            return OrderSerializer
 
     def perform_create(self, serializer):
         order = serializer.save()

@@ -1,10 +1,10 @@
-from .models import Goods, GoodsCategory
+from .models import Goods, GoodsCategory, Banner
 from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework import filters
 from django_filters.rest_framework.backends import DjangoFilterBackend
 
-from .serializers import GoodsSerializer, CategorySerializer
+from .serializers import GoodsSerializer, CategorySerializer, BannerSerializer, IndexCategorySerializer
 from .filters import GoodsFilter
 from .paginations import GoodsPagination
 # Create your views here.
@@ -32,3 +32,19 @@ class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets
     serializer_class = CategorySerializer
     pagination_class = GoodsPagination
     # authentication_classes = (JSONWebTokenAuthentication, )
+
+
+class BannerViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    获取轮播图列表
+    """
+    queryset = Banner.objects.all().order_by('index')
+    serializer_class = BannerSerializer
+
+
+class IndexCategoryViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    首页商品分类数据
+    """
+    queryset = GoodsCategory.objects.filter(is_tab=True)
+    serializer_class = IndexCategorySerializer
