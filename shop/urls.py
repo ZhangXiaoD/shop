@@ -55,7 +55,7 @@ router.register(('indexgoods'), IndexCategoryViewSet, base_name='indexgoods')
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^login/', obtain_jwt_token),
+    url(r'^login/$', obtain_jwt_token),
 
     url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
 
